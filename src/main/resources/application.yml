@@ -1,3 +1,5 @@
 spring:
   application:
-    name: ilya
+    name: products
+  profiles:
+    active: dev
