@@ -1,0 +1,335 @@
+openapi: 3.0.3
+info:
+  title: Склад товаров - OpenAPI 3.0
+  version: 1.0.11
+
+servers:
+  - url: http://localhost:17000
+
+tags:
+  - name: Products
+    description: Реализация CRUD операций над товарами
+
+
+paths:
+  /v1/products:
+    put:
+      tags:
+        - Products
+      summary: Обновляет существующий товар
+      description: Заменяет поля из ProductEntity в базе данных на соответствующие поля из  ProductDto
+      operationId: updateProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDtoRequest'
+        required: true
+      responses:
+        '204':
+          description: Успешно обновлено
+        '400':
+          description: Введенные данные некорректны
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '404':
+          description: Товар с вашим UUID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+        '409':
+          description: Данные содержат конфликт
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+
+    post:
+      tags:
+        - Products
+      summary: Добавляет новый товар
+      description: Добавляет новую сущность товара в базу данных
+      operationId: addProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductDtoRequest'
+        required: true
+      responses:
+        '201':
+          description: Успешно добавлено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDtoResponse'
+        '400':
+          description: Введенные данные некорректны
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '409':
+          description: Данные содержат конфликт
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+
+  /v1/products/{uuid}:
+    get:
+      tags:
+        - Products
+      summary: Получает товар по UUID
+      description: Получает всю информацию о сущности товара из базы данных по UUID
+      operationId: getProductByUuid
+      parameters:
+        - name: uuid
+          description: UUID товара который мы хотим получить
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '200':
+          description: Успешно получено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDtoResponse'
+        '400':
+          description: UUID неправильно введен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+        '404':
+          description: Товар с вашим UUID не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+
+    delete:
+      tags:
+        - Products
+      summary: Удаляет товар по UUID
+      description: Производит полное (тихое) удаление сущности из базы данных. Если сущность была не найдена, то ничего не делает.
+      operationId: deleteProductByUuid
+      parameters:
+        - name: uuid
+          description: UUID товара который мы хотим получить
+          in: path
+          schema:
+            type: string
+          required: true
+          example: 123e4567-e89b-12d3-a456-426614174000
+      responses:
+        '204':
+          description: Успешно удалено
+
+components:
+  schemas:
+    ValidationErrorResponse:
+      description: Ошибка отсылаемая пользователю, если тот прислал невалидный объект
+      type: object
+      required:
+        - title
+        - details
+        - request
+        - timestamp
+      properties:
+        title:
+          type: string
+          format: string
+          description: Краткое описание проблемы
+          example: Невалидные данные
+        details:
+          type: array
+          items:
+            $ref: '#/components/schemas/Violation'
+          example:
+            - fieldName: quantity
+              message: Quantity must be positive or 0
+            - fieldName: price
+              message: Price  must be positive or 0
+        request:
+          type: string
+          format: string
+          description: Метод и URL запроса
+          example: POST /products
+        timestamp:
+          type: string
+          format: date-time
+          description: Дата и время возникновения ошибки
+          example: 2025-07-26T17:32:28Z
+
+    Violation:
+      description: поле не прошедшее валидацию
+      required:
+        - fieldName
+        - message
+      properties:
+        fieldName:
+          type: string
+          format: string
+          description: Имя поля, которое не прошло валидацию
+          example: quantity
+        message:
+          type: string
+          format: string
+          description: Описание каких рамок не прошел объект
+          example: Quantity must be positive or 0
+
+    ClientErrorResponse:
+      description: В случае ожидаемой ошибки будет отослан этот объект
+      required:
+        - title
+        - details
+        - request
+        - timestamp
+      properties:
+        title:
+          type: string
+          format: string
+          description: Краткое описание проблемы
+          example: NoSuchElementException
+        details:
+          type: string
+          format: string
+          description: Конкретное описание возникшей ошибки
+          example: Product with UUID=66c8fae2-0551-4d90-9eeb-dc24eb683bb8 not found
+        request:
+          type: string
+          format: string
+          description: Метод и URL запроса
+          example: GET /v1/products/66c8fae2-0551-4d90-9eeb-dc24eb683bb8
+        timestamp:
+          type: string
+          format: date-time
+          description: Дата и время возникновения ошибки
+          example: 2025-07-26T17:32:28Z
+
+    ProductDtoRequest:
+      description: ProductDtoRequest содержащий все поля кроме id (Может содержать, но будет проигнорировано)
+      type: object
+      required:
+        - title
+        - vendor_code
+        - description
+        - category
+        - price
+        - quantity
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        title:
+          type: string
+          format: string
+          minLength: 1
+          maxLength: 50
+          description: Название товара
+          example: Желтая уточка
+        vendor_code:
+          type: string
+          format: string
+          pattern: '^\d{6}$'
+          description: Артикул
+          example: 110075
+        description:
+          type: string
+          format: string
+          minLength: 0
+          maxLength: 255
+          description: Описание товара
+          example: Яркая утка для ванны из желтого пластика с полостью внутри.
+        category:
+          type: string
+          format: string
+          minLength: 1
+          maxLength: 50
+          description: Категория товара
+          example: Товары для дома
+        price:
+          type: number
+          format: double
+          description: Цена товара в рублях (условно)
+          example: 149.99
+        quantity:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+          format: int32
+          description: Количество товара в штуках
+          example: 15
+
+    ProductDtoResponse:
+      type: object
+      required:
+        - id
+        - title
+        - vendorCode
+        - description
+        - category
+        - price
+        - quantity
+        - createAt
+        - quantityLastUpdated
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426614174000
+        title:
+          type: string
+          format: string
+          minLength: 1
+          maxLength: 50
+          description: Название товара
+          example: Желтая уточка
+        vendorCode:
+          type: string
+          format: string
+          pattern: '^\d{6}$'
+          description: Артикул
+          example: 110075
+        description:
+          type: string
+          format: string
+          minLength: 0
+          maxLength: 255
+          description: Описание товара
+          example: Яркая утка для ванны из желтого пластика с полостью внутри.
+        category:
+          type: string
+          format: string
+          minLength: 1
+          maxLength: 50
+          description: Категория товара
+          example: Товары для дома
+        price:
+          type: number
+          format: double
+          description: Цена товара в рублях (условно)
+          example: 149.99
+        quantity:
+          type: integer
+          format: int32
+          description: Количество товара в шт
+          example: 15
+        createAt:
+          type: string
+          format: date-time
+          description: Дата и время создания товара
+          example: 2023-02-26T17:32:28Z
+        quantityLastUpdated:
+          type: string
+          format: date-time
+          description: Дата и время обновления количества товара
+          example: 2023-02-26T17:32:28Z
