@@ -28,7 +28,11 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductById(UUID id){
-        return null;
+        return productRepository.findById(id)
+                .orElseThrow(
+                        () -> new NoSuchElementException(
+                                "Product with this UUID not found"
+                ));
     }
 
     /**
@@ -36,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void deleteProductById(UUID id){
+        productRepository.deleteById(id);
     }
 
     /**
@@ -46,7 +51,17 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product updateProduct(@Valid ProductDtoRequest productReq){
-        return null;
+        Product product = getProductById(productReq.getId());
+        product.setTitle(productReq.getTitle());
+        product.setVendorCode(productReq.getVendorCode());
+        product.setDescription(productReq.getDescription());
+        product.setCategory(productReq.getCategory());
+        product.setPrice(productReq.getPrice());
+        if(!Objects.equals(product.getQuantity(), productReq.getQuantity())) {
+            product.setQuantity(productReq.getQuantity());
+            product.setQuantityLastUpdated(OffsetDateTime.now());
+        }
+        return productRepository.save(product);
     }
 
     /**
@@ -57,6 +72,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product saveProduct(@Valid ProductDtoRequest productReq){
-        return null;
+        Product product = new Product(productReq);
+        return productRepository.save(product);
     }
 }
