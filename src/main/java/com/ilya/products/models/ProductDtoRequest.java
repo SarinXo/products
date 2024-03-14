@@ -21,11 +21,21 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(name = "ProductDtoRequest",
+        description = "ProductDtoRequest содержащий все поля кроме id (Может содержать, но будет проигнорировано)")
 public class ProductDtoRequest {
 
+    /**
+     * Уникальный идентификатор
+     */
     @JsonProperty("id")
+    @Schema(name = "id", example = "123e4567-e89b-12d3-a456-426614174000",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private UUID id;
 
+    /**
+     * Название товара
+     */
     @NotNull(message = "Title code can't be null")
     @Size(min = 1, max = 50, message = "Title size should range from 1 to 50")
     @Schema(name = "title", example = "Желтая уточка",
@@ -33,6 +43,9 @@ public class ProductDtoRequest {
     @JsonProperty("title")
     private String title;
 
+    /**
+     * Артикул
+     */
     @NotNull(message = "Vendor code can't be null")
     @Pattern(regexp = "^\\d{6}$", message = "Vendor code must contain only 6 digits")
     @Schema(name = "vendor_code", example = "110075",
@@ -40,6 +53,9 @@ public class ProductDtoRequest {
     @JsonProperty("vendor_code")
     private String vendorCode;
 
+    /**
+     * Описание товара
+     */
     @NotNull(message = "Description code can't be null")
     @Size(max = 255, message = "Description too large")
     @Schema(name = "description", example = "Яркая утка для ванны из желтого пластика с полостью внутри.",
@@ -47,6 +63,9 @@ public class ProductDtoRequest {
     @JsonProperty("description")
     private String description;
 
+    /**
+     * Категория товара
+     */
     @NotNull(message = "Category can't be null")
     @Size(min = 1, max = 50, message = "Category size should range from 1 to 50")
     @Schema(name = "category", example = "Товары для дома",
@@ -54,6 +73,9 @@ public class ProductDtoRequest {
     @JsonProperty("category")
     private String category;
 
+    /**
+     * Цена товара в рублях (условно)
+     */
     @NotNull(message = "Price can't be null")
     @PositiveOrZero(message = "Price must be positive number or 0")
     @Schema(name = "price", example = "149.99",
@@ -61,6 +83,11 @@ public class ProductDtoRequest {
     @JsonProperty("price")
     private Double price;
 
+    /**
+     * Количество товара в штуках
+     * minimum: 0
+     * maximum: 2147483647
+     */
     @NotNull(message = "Quantity can't be null")
     @PositiveOrZero(message = "Quantity must be positive number or 0")
     @Schema(name = "quantity", example = "15",

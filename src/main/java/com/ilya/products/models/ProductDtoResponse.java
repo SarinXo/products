@@ -23,18 +23,27 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProductDtoResponse {
 
+    /**
+     * Уникальный идентификатор
+     */
     @NotNull(message = "UUID can't be null")
     @Schema(name = "id", example = "123e4567-e89b-12d3-a456-426614174000",
             requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("id")
     private final UUID id;
 
+    /**
+     * Название товара
+     */
     @Size(min = 1, max = 50, message = "Title size should range from 1 to 50")
     @Schema(name = "title", example = "Желтая уточка",
             description = "Название товара", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("title")
     private final String title;
 
+    /**
+     * Артикул
+     */
     @NotNull(message = "Vendor code can't be null")
     @Pattern(regexp = "^\\d{6}$", message = "Vendor code must contain only 6 digits")
     @Schema(name = "vendor_code", example = "110075",
@@ -42,12 +51,18 @@ public class ProductDtoResponse {
     @JsonProperty("vendor_code")
     private final String vendorCode;
 
+    /**
+     * Описание товара
+     */
     @Size(max = 255, message = "Description too large")
     @Schema(name = "description", example = "Яркая утка для ванны из желтого пластика с полостью внутри.",
             description = "Описание товара", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("description")
     private final String description;
 
+    /**
+     * Категория товара
+     */
     @NotNull(message = "Category can't be null")
     @Size(min = 1, max = 50, message = "Category size should range from 1 to 50")
     @Schema(name = "category", example = "Товары для дома",
@@ -55,18 +70,27 @@ public class ProductDtoResponse {
     @JsonProperty("category")
     private final String category;
 
+    /**
+     * Цена товара в рублях (условно)
+     */
     @NotNull(message = "Price can't be null")
     @Schema(name = "price", example = "149.99",
             description = "Цена товара в рублях (условно)", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("price")
     private final Double price;
 
+    /**
+     * Количество товара в шт
+     */
     @PositiveOrZero(message = "Quantity must be positive number or 0")
     @Schema(name = "quantity", example = "15",
             description = "Количество товара в штуках", requiredMode = Schema.RequiredMode.REQUIRED)
     @JsonProperty("quantity")
     private final Integer quantity;
 
+    /**
+     * Дата и время создания товара
+     */
     @NotNull(message = "create time can't be null")
     @Schema(name = "createAt", example = "2023-02-26T17:32:28Z",
             description = "Дата и время создания товара", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -74,6 +98,9 @@ public class ProductDtoResponse {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private final OffsetDateTime createAt;
 
+    /**
+     * Дата и время обновления количества товара
+     */
     @NotNull(message = "quantity last updated time can't be null")
     @Schema(name = "quantityLastUpdated", example = "2023-02-26T17:32:28Z",
             description = "Дата и время обновления количества товара", requiredMode = Schema.RequiredMode.REQUIRED)
