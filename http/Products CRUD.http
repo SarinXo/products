@@ -1,0 +1,104 @@
+# Products CRUD
+
+###
+# @name get existing - 200 - productDto
+GET http://localhost:17000/v1/products/550e8400-e29b-41d4-a716-446655440000
+
+###
+# @name get not existing - 404 - errorDto
+GET http://localhost:17000/v1/products/550e8400-e29b-41d4-a716-777777777777
+
+###
+# @name bad format UUID - 400 - errorDto
+GET http://localhost:17000/v1/products/rickroll
+
+###
+# @name create new - 201 - productDto
+POST http://localhost:17000/v1/products
+Content-Type: application/json
+
+{
+  "title": "коробочка",
+  "vendor_code": "199222",
+  "description": "Обычная картонная коробка",
+  "category": "Упаковочные материалы",
+  "price": 39.99,
+  "quantity": 100
+}
+
+###
+# @name attempt to send invalid parametrs - 400 - ValidationErrorDto
+POST http://localhost:17000/v1/products
+Content-Type: application/json
+
+{
+  "title": null,
+  "vendor_code": null,
+  "description": null,
+  "category": null,
+  "price": null,
+  "quantity": null
+}
+
+###
+# @name attempt to send an existing vendor_code - 409 - errorDto
+POST http://localhost:17000/v1/products
+Content-Type: application/json
+
+{
+  "title": "коробочка",
+  "vendor_code": "104629",
+  "description": "Обычная картонная коробка",
+  "category": "Упаковочные материалы",
+  "price": 39.99,
+  "quantity": 75
+}
+
+###
+# @name update - 204
+PUT http://localhost:17000/v1/products
+Content-Type: application/json
+
+{
+  "uuid": "550e8400-e29b-41d4-a716-446655440001",
+  "title": "коробочка",
+  "vendor_code": "000002",
+  "description": "Обычная картонная коробка",
+  "category": "Упаковочные материалы",
+  "price": 39.99,
+  "quantity": 10
+}
+
+###
+# @name try update with invalid parametrs - 400 - ValidationErrorDto
+PUT http://localhost:17000/v1/products
+Content-Type: application/json
+
+{
+  "uuid": "550e8400-e29b-41d4-a716-446655440001",
+  "title": "коробочка",
+  "vendor_code": "916214",
+  "description": "Обычная картонная коробка",
+  "category": "Упаковочные материалы",
+  "price": 39.99,
+  "quantity": -23
+}
+
+###
+# @name unexist product - 404 - errorDto
+PUT http://localhost:17000/v1/products
+Content-Type: application/json
+
+{
+  "uuid": "550e8400-e29b-41d4-a716-777777777777",
+  "title": "коробочка",
+  "vendor_code": "916214",
+  "description": "Обычная картонная коробка",
+  "category": "Упаковочные материалы",
+  "price": 39.99,
+  "quantity": 1000
+}
+
+###
+# @name silent removal - 204
+DELETE http://localhost:17000/v1/products/550e8400-e29b-41d4-a716-446655440001

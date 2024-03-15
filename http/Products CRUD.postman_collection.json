@@ -1,0 +1,334 @@
+{
+	"info": {
+		"_postman_id": "383f96b7-62e8-4926-a8f1-fc50a1eaf07f",
+		"name": "Products CRUD",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23941717"
+	},
+	"item": [
+		{
+			"name": "get existing - 200 - productDto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:17000/v1/products/550e8400-e29b-41d4-a716-446655440001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products",
+						"550e8400-e29b-41d4-a716-446655440001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get not existing - 404 - errorDto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:17000/v1/products/{{bad-uuid}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products",
+						"{{bad-uuid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "bad format UUID - 400 - errorDto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:17000/v1/products/rickroll",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products",
+						"rickroll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create new - 201 - productDto",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"коробочка\",\r\n    \"vendor_code\": \"199222\",\r\n    \"description\": \"Обычная картонная коробка\",\r\n    \"category\": \"Упаковочные материалы\",\r\n    \"price\": 39.99,\r\n    \"quantity\": 100\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:17000/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "attempt to send invalid parametrs - 400 - ValidationErrorDto",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": null,\r\n    \"vendor_code\": null,\r\n    \"description\": null,\r\n    \"category\": null,\r\n    \"price\": null,\r\n    \"quantity\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:17000/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "attempt to send an existing vendor_code - 409 - errorDto",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"коробочка\",\r\n    \"vendor_code\": \"104629\",\r\n    \"description\": \"Обычная картонная коробка\",\r\n    \"category\": \"Упаковочные материалы\",\r\n    \"price\": 39.99,\r\n    \"quantity\": 75\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:17000/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update - 204",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"uuid\": \"550e8400-e29b-41d4-a716-446655440001\",\r\n    \"title\": \"коробочка\",\r\n    \"vendor_code\": \"000002\",\r\n    \"description\": \"Обычная картонная коробка\",\r\n    \"category\": \"Упаковочные материалы\",\r\n    \"price\": 39.99,\r\n    \"quantity\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:17000/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "try update with invalid parametrs - 400 - ValidationErrorDto",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"uuid\": \"550e8400-e29b-41d4-a716-446655440001\",\r\n    \"title\": \"коробочка\",\r\n    \"vendor_code\": \"916214\",\r\n    \"description\": \"Обычная картонная коробка\",\r\n    \"category\": \"Упаковочные материалы\",\r\n    \"price\": 39.99,\r\n    \"quantity\": -23\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:17000/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unexist product - 404 - errorDto",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"uuid\": \"550e8400-e29b-41d4-a716-777777777777\",\r\n    \"title\": \"коробочка\",\r\n    \"vendor_code\": \"916214\",\r\n    \"description\": \"Обычная картонная коробка\",\r\n    \"category\": \"Упаковочные материалы\",\r\n    \"price\": 39.99,\r\n    \"quantity\": 1000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:17000/v1/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "silent removal - 204",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:17000/v1/products/{{uuid}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "17000",
+					"path": [
+						"v1",
+						"products",
+						"{{uuid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "uuid",
+			"value": "550e8400-e29b-41d4-a716-446655440001"
+		},
+		{
+			"key": "bad-uuid",
+			"value": "550e8410-e29b-41d4-a716-446655440002"
+		}
+	]
+}

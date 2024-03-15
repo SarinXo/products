@@ -1,0 +1,21 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: 'postgres:15.2'
+    environment:
+      - 'POSTGRES_USER=myuser'
+      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_PASSWORD=secret'
+    ports:
+      - '5432:5432'
+
+  app:
+    build:
+      context: ../
+      dockerfile: container/Dockerfile
+    container_name: 'products-service'
+    depends_on:
+      - postgres
+    ports:
+      - '17000:17000'
