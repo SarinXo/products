@@ -12,6 +12,7 @@ spring:
   flyway:
     enabled: true
     schemas: app
+    locations: classpath:migration
   docker:
     compose:
       lifecycle-management: start_only
